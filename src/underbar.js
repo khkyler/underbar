@@ -96,11 +96,16 @@ var _ = {};
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var uniqArray =[];
-    for (var i =0; i< array.length; i++){
-      if (uniqArray.indexOf(array[i]) < 0){
-        uniqArray.push(array[i]);
-      }
-    }
+    // for (var i =0; i< array.length; i++){
+    //   if (uniqArray.indexOf(array[i]) < 0){
+    //     uniqArray.push(array[i]);
+    //   }
+    // }
+    _.each(array, function (value, key){
+       if (uniqArray.indexOf(array[key]) < 0){
+        uniqArray.push(array[key]);
+       }
+    })
     return uniqArray; 
   };
 
@@ -108,9 +113,12 @@ var _ = {};
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
     var newArray = [];
-    for (var i = 0; i < collection.length; i++){
-      newArray[i] = iterator(collection[i]);
-    } 
+    // for (var i = 0; i < collection.length; i++){
+    //   newArray[i] = iterator(collection[i]);
+    // } 
+    _.each(collection, function (value, key){
+      newArray[key] = iterator(collection[key]);
+    })
     return newArray
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
@@ -139,13 +147,20 @@ var _ = {};
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
     var newArray = [];
-    for (var i =0; i < collection.length; i++){
+    // for (var i =0; i < collection.length; i++){
+    //   if (typeof functionOrKey === 'function'){
+    //     newArray[i] = functionOrKey.apply(collection[i], args);
+    //   }else if (typeof functionOrKey === 'string'){
+    //     newArray[i] = collection[i][functionOrKey](args);
+    //   } 
+    // }
+    _.each(collection, function(value, key){
       if (typeof functionOrKey === 'function'){
-        newArray[i] = functionOrKey.apply(collection[i], args);
+        newArray[key] = functionOrKey.apply(collection[key], args);
       }else if (typeof functionOrKey === 'string'){
-        newArray[i] = collection[i][functionOrKey](args);
+        newArray[key] = collection[key][functionOrKey](args);
       } 
-    }
+    })
     return newArray;
   };
 
@@ -165,13 +180,19 @@ var _ = {};
   _.reduce = function(collection, iterator, accumulator) {
     if (accumulator === undefined){
       accumulator = collection[0];
-      for (var i = 0; i < collection.length; i++){
-         accumulator = iterator(accumulator, collection[i]);
-      }
+      // for (var i = 0; i < collection.length; i++){
+      //    accumulator = iterator(accumulator, collection[i]);
+      // }
+      _.each(collection, function(value, key){
+        accumulator = iterator(accumulator,collection[key]);
+      })
     } else {
-      for (var i = 0; i < collection.length; i++){
-         accumulator = iterator(accumulator, collection[i]);
-      }
+      // for (var i = 0; i < collection.length; i++){
+      //    accumulator = iterator(accumulator, collection[i]);
+      // }
+      _.each(collection, function(value, key){
+        accumulator = iterator(accumulator,collection[key]);
+      })
     }
     return accumulator
   };
