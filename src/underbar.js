@@ -215,8 +215,14 @@ var _ = {};
     if (iterator === undefined){
       iterator = _.identity;
     }
-    return _.reduce(collection, function (){
-
+    return _.reduce(collection, function (accumulator, value){
+      if (!accumulator){
+      return false;
+    }else if (!iterator(value)){
+      return false;
+    }else {
+      return true;
+    }
     }, true)
     // TIP: Try re-using reduce() here.
   };
