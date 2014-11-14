@@ -147,20 +147,20 @@ var _ = {};
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
     var newArray = [];
-    // for (var i =0; i < collection.length; i++){
-    //   if (typeof functionOrKey === 'function'){
-    //     newArray[i] = functionOrKey.apply(collection[i], args);
-    //   }else if (typeof functionOrKey === 'string'){
-    //     newArray[i] = collection[i][functionOrKey](args);
-    //   } 
-    // }
-    _.each(collection, function(value, key){
+    for (var i =0; i < collection.length; i++){
       if (typeof functionOrKey === 'function'){
-        newArray[key] = functionOrKey.apply(collection[key], args);
+        newArray[i] = functionOrKey.apply(collection[i], args);
       }else if (typeof functionOrKey === 'string'){
-        newArray[key] = collection[key][functionOrKey](args);
+        newArray[i] = collection[i][functionOrKey](args);
       } 
-    })
+    }
+    // _.each(collection, function(value, key){
+    //   if (typeof functionOrKey === 'function'){
+    //     newArray[key] = functionOrKey.apply(value, args);
+    //   }else if (typeof functionOrKey === 'string'){
+    //     newArray[key] = value[functionOrKey](args);
+    //   } 
+    // })
     return newArray;
   };
 
@@ -235,8 +235,8 @@ var _ = {};
       iterator = _.identity;
     }
     return !(_.every(collection, function (item){
-      return !(iterator(item))
-    }))
+      return !(iterator(item));
+    }));
     
   };
 
@@ -260,17 +260,32 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-    console.log(arguments);
-    var newObj = {} 
-    _.each(arguments, function(value, key){
-      newObj = arguments;
+    
+    // _.each(arguments, function(value, key){
+    //   for (var prop in value){
+        
+    //     obj[prop] = value[prop];
+    //   }
+    // });
+    _.each(arguments, function(object, index){
+      _.each(object, function(value, key){
+        obj[key] = value;
+      })
     })
-    return newObj;
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    _.each(arguments, function(object, index){
+      _.each(object, function(value, key){
+        if (obj[key] === undefined){
+          obj[key] = value;
+        }
+      })
+    })
+    return obj;
   };
 
 
@@ -297,6 +312,7 @@ var _ = {};
       if (!alreadyCalled) {
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
         // infromation from one function call to another.
+
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
@@ -312,6 +328,20 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    
+    var funcStorage = {'alreadyCalled': false};
+
+    //var alreadyCalled = false;
+    var result;
+    return function(){
+      if (!funcStorage['alreadyCalled']) {
+        funcStorage[arguments[0]] = func.apply(this, arguments);
+        funcStorage['alreadyCalled'] = true;
+      } else if (funcStorage[arguments[0]] === undefined){
+        funcStorage[arguments[0]] = func.apply(this, arguments);
+      }
+      return funcStorage[arguments[0]]
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -321,6 +351,26 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    console.log('test2');
+    var args = [];
+    for (var i = 2;i < arguments.length;i++){
+      args.push(arguments[i]);
+    }
+    var currentTime = new Date().getTime();
+
+    console.log(currentTime);
+    var milliseconds = currentTime.getMilliseconds();
+    var totalWait = milliseconds + wait;
+    console.log(milliseconds);
+    console.log(totalWait);
+    // while (milliseconds < totalWait){
+    //   milliseconds = currentTime.getMilliseconds();
+    //   if (milliseconds === wait){
+    //     console.log('should call');
+    //     func.apply(args);
+    //   }
+    // }
+    
   };
 
 
