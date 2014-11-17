@@ -329,14 +329,14 @@ var _ = {};
   // instead if possible.
   _.memoize = function(func) {
     
-    var funcStorage = {'alreadyCalled': false};
+    var funcStorage = {};
 
-    //var alreadyCalled = false;
-    var result;
+    
     return function(){
-      if (!funcStorage['alreadyCalled']) {
+      if (!(_.contains(funcStorage, func))) {
+        funcStorage['function'] = func;
         funcStorage[arguments[0]] = func.apply(this, arguments);
-        funcStorage['alreadyCalled'] = true;
+        
       } else if (funcStorage[arguments[0]] === undefined){
         funcStorage[arguments[0]] = func.apply(this, arguments);
       }
@@ -356,7 +356,7 @@ var _ = {};
     for (var i = 2;i < arguments.length;i++){
       args.push(arguments[i]);
     }
-    var currentTime = new Date().getTime();
+    var currentTime = Date.now();
 
     console.log(currentTime);
     var milliseconds = currentTime.getMilliseconds();
