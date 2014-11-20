@@ -261,12 +261,7 @@ var _ = {};
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
     
-    // _.each(arguments, function(value, key){
-    //   for (var prop in value){
-        
-    //     obj[prop] = value[prop];
-    //   }
-    // });
+    
     _.each(arguments, function(object, index){
       _.each(object, function(value, key){
         obj[key] = value;
@@ -351,26 +346,29 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    console.log('test2');
     var args = [];
     for (var i = 2;i < arguments.length;i++){
       args.push(arguments[i]);
     }
-    var currentTime = Date.now();
+    if (args.length === 0){
+      setTimeout(func,wait);
+    }else {
+      console.log(args, arguments);
+      setTimeout(func, wait, args);
+    }
 
-    console.log(currentTime);
-    var milliseconds = currentTime.getMilliseconds();
-    var totalWait = milliseconds + wait;
-    console.log(milliseconds);
-    console.log(totalWait);
-    // while (milliseconds < totalWait){
-    //   milliseconds = currentTime.getMilliseconds();
-    //   if (milliseconds === wait){
+
+    // var currentTime =  Date.now();
+    
+    // var endTime = currentTime + wait;
+    
+    // while (currentTime <= endTime){
+    //   currentTime = Date.now();
+    //   if (endTime === Date.now()) {
     //     console.log('should call');
-    //     func.apply(args);
+    //     return func.apply(args);
     //   }
     // }
-    
   };
 
 
@@ -385,6 +383,19 @@ var _ = {};
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var newArray = [];
+    var temp;
+    var randomIndex;
+    newArray = array.slice();
+
+    _.each(newArray, function(value, index){
+      temp = value;
+      randomIndex = Math.random() * newArray.length;
+      randomIndex = Math.floor(randomIndex);
+      newArray[index] = newArray[randomIndex];
+      newArray[randomIndex] = temp;
+    });
+    return newArray;
   };
 
 
