@@ -353,8 +353,9 @@ var _ = {};
     if (args.length === 0){
       setTimeout(func,wait);
     }else {
-      console.log(args, arguments);
-      setTimeout(func, wait, args);
+      setTimeout(function(){
+        func.apply(this, args);
+      }, wait);
     }
 
 
